@@ -2,6 +2,8 @@ import logging
 from dns_enum import get_dns_records
 from banner_grabber import grab_banner
 from tech_detect import detect_with_wappalyzer
+from subdomain_enum import enumerate_subdomains  
+from whois_lookup import get_whois_info, print_whois_info
 
 def main():
     logging.basicConfig(level=logging.INFO, format="%(message)s")
@@ -11,6 +13,40 @@ def main():
     url = f"https://{domain}"
     ports = [80, 443, 21, 22, 8080]
 
+    # Ask if user wants to run subdomain enumeration
+    run_subdomain_enum = input("Do you want to perform subdomain enumeration? (y/n): ").strip().lower() == "y"
+    otx_api_key = None
+    if run_subdomain_enum:
+        use_otx = input("Do you want to use AlienVault OTX (requires API key)? (y/n): ").strip().lower() == "y"
+        if use_otx:
+            otx_api_key = input("Enter your AlienVault OTX API Key: ").strip()
+
+        # SUBDOMAIN ENUMERATION
+        print("\n====== SUBDOMAIN ENUMERATION RESULTS ======\n")
+        try:
+            subdomains = enumerate_subdomains(domain, otx_api_key=otx_api_key, verbose=True)
+            if subdomains:
+                print(f"\nTotal Subdomains Found: {len(subdomains)}\n")
+                for sub in subdomains:
+                    print(f"- {sub}")
+            else:
+                print("No subdomains found.")
+        except Exception as e:
+            print(f"Error in Subdomain Enumeration: {e}")
+
+    # WHOIS LOOKUP
+    run_whois = input("Do you want to perform WHOIS Lookup? (y/n): ").strip().lower() == "y"
+    if run_whois:
+        print("\n====== WHOIS LOOKUP ======\n")
+        try:
+            whois_data = get_whois_info(domain, verbose=True)
+            if whois_data:
+                print_whois_info(whois_data)
+            else:
+                print("WHOIS data not found.")
+        except Exception as e:
+            print(f"Error in WHOIS Lookup: {e}")
+    
     # DNS ENUMERATION
     print("\n====== DNS ENUMERATION RESULTS ======\n")
     try:
