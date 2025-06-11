@@ -1,114 +1,151 @@
-# 🔍 Reconnaissance-Tool
+# 🔍 Reconnaissance Tool
 
-A modular reconnaissance tool for ethical hacking and penetration testing, developed in Python. This tool helps you gather intelligence about a domain through:
-
-- DNS Enumeration
-- Banner Grabbing
-- Web Technology Detection (via Wappalyzer)
+A powerful and modular Python-based reconnaissance framework for ethical hackers and cybersecurity researchers. This tool performs passive and active recon to gather information about a target, including subdomains, DNS records, WHOIS info, open ports, banners, and technologies used.
 
 ---
 
-## 📦 Features
+## 📁 Project Structure
 
-- 🔎 **DNS Enumeration**: Retrieves A, MX, TXT, NS, CNAME, and SOA records.
-- 🛰️ **Banner Grabbing**: Attempts to connect to common ports and retrieve service banners.
-- 🧠 **Technology Detection**: Identifies technologies used by the website using the `Wappalyzer` Python package.
+```
+Reconnaissance-Tool/
+├── active/
+│   ├── banner_grabber.py
+│   ├── port_scanner.py
+│   └── tech_detect.py
+├── passive/
+│   ├── dns_enum.py
+│   ├── subdomain_enum.py
+│   └── whois_lookup.py
+├── cli/
+│   └── cli_handler.py
+├── logs/
+│   └── tool.log
+├── main.py
+├── README.md
+└── requirements.txt
+```
 
 ---
 
-## 🛠️ Installation
+## ⚙️ Features
 
-### 1. Clone the repository
-```bash
-git clone https://github.com/rajaabdullahnasir/Reconnaissance-Tool.git
-cd Reconnaissance-Tool
-```
+- ✅ Subdomain Enumeration using crt.sh  
+- ✅ WHOIS Lookup  
+- ✅ DNS Record Enumeration (A, NS, MX, TXT, SOA)  
+- ✅ Full TCP Port Scan (1–65535)  
+- ✅ Banner Grabbing on Open Ports  
+- ✅ Technology Detection using Wappalyzer  
+- ✅ Logging to `logs/tool.log`
 
-### 2. Set up a virtual environment (optional but recommended)
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
+---
 
-### 3. Install dependencies
+## 🐍 Requirements
+
+- Python 3.8 or higher
+
+**Install dependencies:**
+
 ```bash
 pip install -r requirements.txt
 ```
+
+**Libraries Used:**
+
+- `requests`  
+- `dnspython`  
+- `whois`  
+- `Wappalyzer`
 
 ---
 
 ## 🚀 Usage
 
-```bash
-python main.py
-```
-
-You'll be prompted to enter a domain (e.g., `example.com`). The tool will then display:
-
-- DNS records
-- Service banners on common ports (21, 22, 80, 443, 8080)
-- Technologies detected on the website
-
----
-
-## 📂 Modules
-
-- `main.py`: Entry point to the program
-- `dns_enum.py`: Handles DNS lookups
-- `banner_grabber.py`: Grabs banners from services
-- `tech_detect.py`: Uses `Wappalyzer` to identify technologies
-
----
-
-## 🧱 Requirements
-
-- Python 3.8+
-- [Wappalyzer](https://github.com/AliasIO/wappalyzer) (Python port)
-- `dnspython`, `requests`, etc.
-
-Install dependencies using:
+Run the tool using:
 
 ```bash
-pip install -r requirements.txt
+python3 main.py <domain> [options]
 ```
+
+### Example:
+
+```bash
+python3 main.py testphp.vulnweb.com --subdomains --whois --dns --ports --banner --tech
+```
+
+### CLI Options:
+
+| Option         | Description                                  |
+|----------------|----------------------------------------------|
+| `<domain>`     | Target domain (e.g. example.com)             |
+| `--scheme`     | URL scheme (http or https), default is http  |
+| `--subdomains` | Perform subdomain enumeration                |
+| `--whois`      | Perform WHOIS lookup                         |
+| `--dns`        | Enumerate DNS records                        |
+| `--ports`      | Scan all ports (1–65535)                     |
+| `--banner`     | Grab banners from open ports                 |
+| `--tech`       | Detect web technologies (via Wappalyzer)     |
 
 ---
 
-## 📌 Example Output
+## 📄 Logging
+
+All actions are logged in:
+
+```bash
+logs/tool.log
+```
+
+Use this file to review scan details, errors, and summaries.
+
+---
+
+## 🧪 Sample Output
 
 ```
+====== SUBDOMAIN ENUMERATION RESULTS ======
+- admin.testphp.vulnweb.com
+- dev.testphp.vulnweb.com
+
+====== WHOIS LOOKUP ======
+Registrar: NameCheap, Inc.
+Created: 2010-04-15
+Expires: 2030-04-15
+
 ====== DNS ENUMERATION RESULTS ======
 A Records:
-- 151.101.0.81
-...
+- 93.184.216.34
+
+MX Records:
+- mail.vulnweb.com
+
+====== FULL PORT SCAN (1–65535) ======
+Open Ports:
+- Port 80
+- Port 443
 
 ====== BANNER GRABBING RESULTS ======
-[Port 80] No banner (recv timeout)
+[Port 80] HTTP/1.1 200 OK
+[Port 443] HTTP/1.1 301 Moved Permanently
 
 ====== TECHNOLOGY DETECTION (Wappalyzer) ======
-- jQuery
+- Apache
 - Bootstrap
-- Varnish
-...
+- Google Analytics
 ```
+
+---
+
+## ⚠️ Disclaimer
+
+This tool is intended for educational and authorized use only.  
+**Unauthorized scanning or enumeration of systems without permission may be illegal.**  
+The author is not responsible for any misuse.
 
 ---
 
 ## 📜 License
 
-This project is licensed under the MIT License. Feel free to modify and use it for educational or ethical penetration testing purposes.
+This project is licensed under the **MIT License**.  
+Feel free to use, modify, and distribute with proper attribution.
 
 ---
-
-## 🙋‍♂️ Author
-
-Developed by:
-
- **Abdullah Nasir**
-- 🔗 [GitHub](https://github.com/rajaabdullahnasir)
-
- **Syed Ghufran Raza**
-- 🔗 [GitHub](https://github.com/SyedGhufranRaza)
-
- **Bisma Kamran**
-- 🔗 [GitHub](https://github.com/Bismakamran)
