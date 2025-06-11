@@ -145,7 +145,6 @@ The author is not responsible for any misuse.
 
 ## 📜 License
 
-This project is licensed under the **MIT License**.  
-Feel free to use, modify, and distribute with proper attribution.
+This project is licensed under the [MIT License](./LICENSE).
 
 ---
