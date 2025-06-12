@@ -7,6 +7,7 @@ from active.tech_detect import detect_with_wappalyzer
 from passive.subdomain_enum import enumerate_subdomains  
 from passive.whois_lookup import get_whois_info, print_whois_info
 from cli.cli_handler import handle_cli
+from report.report_writer import save_report, generate_html_report
 
 # === Logging Setup ===
 if not os.path.exists("logs"):
@@ -129,6 +130,53 @@ def main():
         except Exception as e:
             print(f"Error in Technology Detection: {e}")
             logging.error(f"Technology Detection Error: {e}")
+
+
+    # === Report Compilation ===
+    from datetime import datetime
+    import socket
+
+    # Ensure variables are defined even if flags are not passed
+    subdomains = subdomains if args.subdomains and 'subdomains' in locals() else []
+    whois_data = whois_data if args.whois and 'whois_data' in locals() else "No WHOIS data or skipped."
+    dns_results = dns_results if args.dns and 'dns_results' in locals() else {}
+    banner_results = banner_results if args.banner and 'banner_results' in locals() else {}
+    tech_result = tech_result if args.tech and 'tech_result' in locals() else set()
+
+    try:
+        resolved_ip = socket.gethostbyname(domain)
+    except Exception:
+        resolved_ip = "Resolution failed"
+
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+    report_data = f"""Target Domain: {domain}
+Resolved IP: {resolved_ip}
+Timestamp: {timestamp}
+
+[Subdomain Enumeration]
+{chr(10).join(subdomains) if subdomains else "No subdomains or skipped."}
+
+[WHOIS Lookup]
+{whois_data if isinstance(whois_data, str) else str(whois_data)}
+
+[DNS Enumeration]
+{chr(10).join(f"{k}: {', '.join(v)}" for k, v in dns_results.items()) if dns_results else "No DNS records or skipped."}
+
+[Open Ports]
+{chr(10).join(str(p) for p in open_ports) if open_ports else "No open ports or skipped."}
+
+[Banner Grabbing]
+{chr(10).join(f"Port {p}: {b}" for p, b in banner_results.items()) if banner_results else "No banners or skipped."}
+
+[Technology Detection]
+{chr(10).join(tech_result) if isinstance(tech_result, set) and tech_result else "No technologies or skipped."}
+"""
+
+    # Save reports
+    save_report(domain, report_data, format="txt")
+    generate_html_report(domain, report_data)
+
 
 if __name__ == "__main__":
     main()
