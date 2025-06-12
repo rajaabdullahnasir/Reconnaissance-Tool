@@ -18,6 +18,8 @@ Reconnaissance-Tool/
 │   └── whois_lookup.py
 ├── cli/
 │   └── cli_handler.py
+├── report/
+│   └── report_writer.py
 ├── logs/
 │   └── tool.log
 ├── main.py
@@ -36,6 +38,7 @@ Reconnaissance-Tool/
 - ✅ Banner Grabbing on Open Ports  
 - ✅ Technology Detection using Wappalyzer  
 - ✅ Logging to `logs/tool.log`
+- ✅ Automatic Report Generation (TXT & HTML)
 
 ---
 
@@ -55,6 +58,7 @@ pip install -r requirements.txt
 - `dnspython`  
 - `whois`  
 - `Wappalyzer`
+- `chart.js`
 
 ---
 
@@ -96,6 +100,14 @@ logs/tool.log
 ```
 
 Use this file to review scan details, errors, and summaries.
+
+---
+
+## 📑 Report Generation
+
+After each scan, the tool automatically generates:
+- 📝 Text Report `(.txt)`: Plain text format for CLI or archival use.
+- 🌐 HTML Report `(.html)`: Clean, interactive report with collapsible sections and module summary chart (via `Chart.js`).
 
 ---
 
